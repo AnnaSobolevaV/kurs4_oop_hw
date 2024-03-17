@@ -10,23 +10,15 @@ class Category:
     category_name: str
     category_description: str
     product_list: list
-    category_total: int
-    product_total: int
-
+    category_total = 0
+    product_total = 0
 
     def __init__(self, category_name, category_description, product_list):
         self.category_name = category_name
         self.category_description = category_description
         self.product_list = product_list
-
-    def category_name(self):
-        return self.category_name
-
-    def category_description(self):
-        return self.category_description
-
-    def product_list(self):
-        return self.product_list
+        Category.category_total += 1
+        Category.product_total += len(product_list)
 
 
 class Product:
@@ -47,12 +39,3 @@ class Product:
         self.product_description = product_description
         self.product_price = product_price
         self.product_quantity = product_quantity
-
-
-    def product_name(self):
-        return self.product_name
-
-    def product_description(self):
-        return self.product_description
-
-

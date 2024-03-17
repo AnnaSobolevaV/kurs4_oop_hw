@@ -11,7 +11,8 @@ def load_data(file_json):
             data = json.load(file)
         return data
 
-def to_initialize_category_and_products(data):
+
+def to_create_list_of_categories_with_products(data):
     categories = []
     for item in data:
         product_list = []
@@ -22,4 +23,4 @@ def to_initialize_category_and_products(data):
                                                 product['description'], product['price'], product['quantity']))
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
-
+    return categories
