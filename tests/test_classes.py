@@ -64,9 +64,9 @@ def test_init_category(category_smartphone, category_smartphone_samsung,
     assert category_smartphone.category_name == "Смартфоны"
     assert category_smartphone.category_description == ("Смартфоны, как средство не только коммуникации, "
                                                         "но и получение дополнительных функций для удобства жизни")
-    assert category_smartphone.product_list == 'Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.'
+    assert category_smartphone.product_list == 'Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
     assert category_smartphone1.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                                 'Samsung Galaxy, 100000.0 руб. Остаток: 10 шт.')
+                                                 'Samsung Galaxy, 100000.0 руб. Остаток: 10 шт.\n')
     assert category_smartphone.category_total == 3
     assert category_smartphone.product_total == 3
     assert category_smartphone1.category_total == 3
@@ -80,13 +80,13 @@ def test_category_add_product_in_list(category_smartphone, category_smartphone_n
     new_prod = Product.add_product(*category_smartphone_new_samsung)
     category_smartphone.add_product_in_list(new_prod)
     assert category_smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                                'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.')
+                                                'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
 
     new_prod = Product.add_product(*category_smartphone_new_samsung_0)
     category_smartphone.add_product_in_list(new_prod)
     assert category_smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                                 'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
-                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.')
+                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
 
 
 def test_new_price(category_smartphone, category_smartphone_new_samsung_0):
@@ -94,13 +94,13 @@ def test_new_price(category_smartphone, category_smartphone_new_samsung_0):
     new_prod.product_price = 0
     category_smartphone.add_product_in_list(new_prod)
     assert category_smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.')
+                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
     new_prod = Product.add_product(*category_smartphone_new_samsung_0)
     new_prod.product_price = 20
     category_smartphone.add_product_in_list(new_prod)
     assert category_smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                                 'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n'
-                                                'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 0 шт.')
+                                                'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 0 шт.\n')
 
     new_prod = Product.add_product(*category_smartphone_new_samsung_0)
     new_prod.product_price = -20
@@ -108,4 +108,38 @@ def test_new_price(category_smartphone, category_smartphone_new_samsung_0):
     assert category_smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                                 'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n'
                                                 'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 0 шт.\n'
-                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.')
+                                                'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+
+
+def test_str_category(category_smartphone1):
+    assert str(category_smartphone1) == ('Смартфоны, количество продуктов: 15 шт.\n'
+                                         'Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
+                                         'Samsung Galaxy, 100000.0 руб. Остаток: 10 шт.\n')
+
+
+def test_str_product(category_smartphone_samsung):
+    assert str(category_smartphone_samsung) == 'Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
+
+
+def test_repr_category(category_smartphone):
+    assert repr(category_smartphone) == ("Category('Смартфоны', 'Смартфоны, как средство не только коммуникации, "
+                                         "но и получение дополнительных функций для удобства жизни', "
+                                         "[Product('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP камера', "
+                                         "180000.0, 5)])7, 8")
+
+
+def test_repr_product(category_smartphone_samsung):
+    assert repr(category_smartphone_samsung) == ("Product('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP "
+                                                 "камера', 180000.0, 5)")
+
+
+def test_len_category(category_smartphone1):
+    assert len(category_smartphone1) == 15
+
+
+def test_len_product(category_smartphone_samsung1):
+    assert len(category_smartphone_samsung1) == 10
+
+
+def test_add_product(category_smartphone_samsung, category_smartphone_samsung1):
+    assert category_smartphone_samsung + category_smartphone_samsung1 == 100000 * 10 + 180000 * 5
