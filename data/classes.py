@@ -18,15 +18,30 @@ class Category:
         self.category_description = category_description
         self.__product_list = product_list
         Category.category_total += 1
-        Category.product_total += len(product_list)
+        Category.product_total += len(self.__product_list)
+
+    def __str__(self):
+        return (f'{self.category_name}, количество продуктов: {len(self)} шт.\n'
+                f'{self.product_list}')
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})"
+            f"{self.category_total}, {self.product_total}"
+        )
+
+    def __len__(self):
+        total_prod_in_category = 0
+        for prod in self.__product_list:
+            total_prod_in_category += prod.product_quantity
+        return total_prod_in_category
 
     @property
     def product_list(self):
         products_printed = ''
         for prod in self.__product_list:
-            product_printed = f'{prod.product_name}, {prod.product_price} руб. Остаток: {prod.product_quantity} шт.\n'
-            products_printed += product_printed
-        return products_printed[:-1]
+            products_printed += str(prod)
+        return products_printed
 
     def add_product_in_list(self, new_prod):
         self.__product_list.append(new_prod)
@@ -50,6 +65,19 @@ class Product:
         self.product_description = prod_description
         self.__product_price = prod_price
         self.product_quantity = prod_quantity
+
+    def __str__(self):
+        return (f'{self.product_name}, {self.product_price} руб. Остаток: {self.product_quantity} шт.\n')
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
+                f" {self.product_price}, {self.product_quantity})")
+
+    def __len__(self):
+        return self.product_quantity
+
+    def __add__(self, other):
+        return self.product_price * len(self) + other.product_price * len(other)
 
     @classmethod
     def add_product(cls, *arg):

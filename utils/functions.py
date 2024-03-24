@@ -16,11 +16,10 @@ def to_create_list_of_categories_with_products(data):
     categories = []
     for item in data:
         product_list = []
-
         products = item.get('products')
         for product in products:
-            product_list.append(classes.Product(product['name'],
-                                                product['description'], product['price'], product['quantity']))
+            prod = classes.Product(product['name'], product['description'], product['price'], product['quantity'])
+            product_list.append(prod)
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
     return categories
