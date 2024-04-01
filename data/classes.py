@@ -26,8 +26,8 @@ class Category:
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})"
-            f"{self.category_total}, {self.product_total}"
+            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})\n"
+            f"Category.category_total: {self.category_total}, Category.product_total: {self.product_total}"
         )
 
     def __len__(self):
@@ -44,7 +44,27 @@ class Category:
         return products_printed
 
     def add_product_in_list(self, new_prod):
-        self.__product_list.append(new_prod)
+        print(new_prod.__class__, self.category_name)
+        if issubclass(new_prod.__class__, Product):
+            if isinstance(new_prod, Smartphone):
+                if self.category_name == 'Смартфоны':
+                    self.__product_list.append(new_prod)
+                else:
+                    return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n '
+                            f'{self.category_name} is not Смартфоны')
+            elif isinstance(new_prod, LawnGrass):
+                if self.category_name == 'Трава газонная':
+                    self.__product_list.append(new_prod)
+                else:
+                    return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n'
+                            f'{self.category_name} is not Трава газонная')
+            elif self.category_name not in ('Смартфоны', 'Трава газонная'):
+                self.__product_list.append(new_prod)
+            else:
+                return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n'
+                        f'{self.category_name} is not Product')
+        else:
+            return f'TypeError: {new_prod.__class__} is not Product'
 
 
 class Product:
@@ -77,7 +97,10 @@ class Product:
         return self.product_quantity
 
     def __add__(self, other):
-        return self.product_price * len(self) + other.product_price * len(other)
+        if isinstance(other, self.__class__):
+            return self.product_price * len(self) + other.product_price * len(other)
+        else:
+            return f"TypeError: different classes"
 
     @classmethod
     def add_product(cls, *arg):
@@ -95,3 +118,65 @@ class Product:
             print('ERROR: Введена некорректная цена. Цена должна быть больше 0')
         else:
             self.__product_price = float(new_price)
+
+
+class Smartphone(Product):
+    """
+    Класс "Смартфоны" подкласс класса "Продукты"(Product) содержит:
+    - performance: int - производительность
+    - model: str - модель
+    - memory: str - объем встроенной памяти
+    - color: str - цвет
+   """
+    performance: int
+    model: str
+    memory: str
+    color: str
+
+    def __init__(self, prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color):
+        super().__init__(prod_name, prod_description, prod_price, prod_quantity)
+        self.performance = performance
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
+                f" {self.product_price}, {self.product_quantity},"
+                f" {self.performance}, '{self.model}',"
+                f" '{self.memory}', '{self.color}')")
+
+    @classmethod
+    def add_product(cls, *arg):
+        prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color = arg
+        new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color)
+        return new_prod
+
+
+class LawnGrass(Product):
+    """
+    Класс "Трава газонная" подкласс класса "Продукты"(Product) содержит:
+    - germ_period: str - страна-производитель
+    - memory: str - срок прорастания
+    - color: str - цвет
+    """
+    country: str
+    germ_period: int
+    color: str
+
+    def __init__(self, prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color):
+        super().__init__(prod_name, prod_description, prod_price, prod_quantity)
+        self.country = country
+        self.germ_period = germ_period
+        self.color = color
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
+                f"{self.product_price}, {self.product_quantity},"
+                f"'{self.country}', '{self.germ_period}', {self.color})")
+
+    @classmethod
+    def add_product(cls, *arg):
+        prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color = arg
+        new_prod = LawnGrass(prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color)
+        return new_prod
