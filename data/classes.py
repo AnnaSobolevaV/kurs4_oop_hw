@@ -77,7 +77,10 @@ class Product:
         return self.product_quantity
 
     def __add__(self, other):
-        return self.product_price * len(self) + other.product_price * len(other)
+        if isinstance(other, self.__class__):
+            return self.product_price * len(self) + other.product_price * len(other)
+        else:
+            return f"TypeError: different classes"
 
     @classmethod
     def add_product(cls, *arg):
@@ -118,9 +121,10 @@ class Smartphone(Product):
         self.color = color
 
     def __repr__(self):
-        super().__repr__()
-        return (f"('{self.performance}', '{self.model}',"
-                f" {self.memory}, {self.color})")
+        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
+                f" {self.product_price}, {self.product_quantity},"
+                f" {self.performance}, '{self.model}',"
+                f" '{self.memory}', '{self.color}')")
 
     @classmethod
     def add_product(cls, *arg):
