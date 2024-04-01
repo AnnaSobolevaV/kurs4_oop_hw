@@ -132,6 +132,20 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     category_tv.add_product_in_list(new_prod)
     assert category_tv.product_list == 'NEW tv, 220000.0 руб. Остаток: 16 шт.\n'
 
+    new_prod = Smartphone.add_product(*smartphone_new_samsung)
+    assert lawn_grass.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.Smartphone'> into "
+                                                        "Трава газонная\n Трава газонная is not Смартфоны")
+
+    new_prod = LawnGrass.add_product(*lw_new)
+    assert category_tv.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.LawnGrass'> "
+                                                         "into Телевизоры\nТелевизоры is not Трава газонная")
+    new_prod = Product.add_product(*tv_new)
+    assert smartphone.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.Product'> "
+                                                        "into Смартфоны\nСмартфоны is not Product")
+
+    new_prod = []
+    assert smartphone.add_product_in_list(new_prod) == "TypeError: <class 'list'> is not Product"
+
 
 def test_new_price(smartphone, smartphone_new_samsung_0):
     new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
