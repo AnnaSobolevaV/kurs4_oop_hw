@@ -95,3 +95,64 @@ class Product:
             print('ERROR: Введена некорректная цена. Цена должна быть больше 0')
         else:
             self.__product_price = float(new_price)
+
+
+class Smartphone(Product):
+    """
+    Класс "Смартфоны" подкласс класса "Продукты"(Product) содержит:
+    - performance: int - производительность
+    - model: str - модель
+    - memory: str - объем встроенной памяти
+    - color: str - цвет
+   """
+    performance: int
+    model: str
+    memory: str
+    color: str
+
+    def __init__(self, prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color):
+        super().__init__(prod_name, prod_description, prod_price, prod_quantity)
+        self.performance = performance
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+    def __repr__(self):
+        super().__repr__()
+        return (f"('{self.performance}', '{self.model}',"
+                f" {self.memory}, {self.color})")
+
+    @classmethod
+    def add_product(cls, *arg):
+        prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color = arg
+        new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color)
+        return new_prod
+
+
+class LawnGrass(Product):
+    """
+    Класс "Трава газонная" подкласс класса "Продукты"(Product) содержит:
+    - germ_period: str - страна-производитель
+    - memory: str - срок прорастания
+    - color: str - цвет
+    """
+    country: str
+    germ_period: int
+    color: str
+
+    def __init__(self, prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color):
+        super().__init__(prod_name, prod_description, prod_price, prod_quantity)
+        self.country = country
+        self.germ_period = germ_period
+        self.color = color
+
+    def __repr__(self):
+        super().__repr__()
+        return (f"('{self.country}', '{self.germ_period}',"
+                f"  {self.color})")
+
+    @classmethod
+    def add_product(cls, *arg):
+        prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color = arg
+        new_prod = LawnGrass(prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color)
+        return new_prod
