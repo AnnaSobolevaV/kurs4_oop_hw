@@ -18,8 +18,17 @@ def to_create_list_of_categories_with_products(data):
         product_list = []
         products = item.get('products')
         for product in products:
-            prod = classes.Product(product['name'], product['description'], product['price'], product['quantity'])
-            product_list.append(prod)
+            if item.get('name') == "Смартфоны":
+                prod = classes.Smartphone(product['name'], product['description'], product['price'], product['quantity'],
+                                          product['performance'], product['model'], product['memory'], product['color'])
+                product_list.append(prod)
+            elif item.get('name') == 'Трава газонная':
+                prod = classes.LawnGrass(product['name'], product['description'], product['price'], product['quantity'],
+                                         product['country'], product['germ_period'], product['color'])
+                product_list.append(prod)
+            else:
+                prod = classes.Product(product['name'], product['description'], product['price'], product['quantity'])
+                product_list.append(prod)
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
     return categories

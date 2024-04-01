@@ -7,19 +7,33 @@
         "name": "Samsung Galaxy C23 Ultra",
         "description": "256GB, Серый цвет, 200MP камера",
         "price": 180000.0,
-        "quantity": 5
+        "quantity": 5,
+        "performance": 500,
+        "model": "Samsung Galaxy",
+        "memory": "256GB",
+        "color": "Серый"
+
       },
       {
         "name": "Iphone 15",
         "description": "512GB, Gray space",
         "price": 210000.0,
-        "quantity": 8
+        "quantity": 8,
+        "performance": 600,
+        "model": "Iphone 15",
+        "memory": "512GB",
+        "color": "Gray"
       },
       {
         "name": "Xiaomi Redmi Note 11",
         "description": "1024GB, Синий",
         "price": 31000.0,
-        "quantity": 14
+        "quantity": 14,
+        "performance": 400,
+        "model": "Xiaomi Redmi Note",
+        "memory": "1024GB",
+        "color": "Синий"
+
       }
     ]
   },
@@ -41,9 +55,13 @@
     "products": [
       {
         "name": "Мечта садовника",
-        "description": "Неприхотливаа",
+        "description": "Неприхотлива",
         "price": 1230.0,
-        "quantity": 17
+        "quantity": 17,
+        "country": "Россия",
+        "germ_period": 20,
+        "color": "зеленая"
+
       }
     ]
   }
