@@ -26,8 +26,8 @@ class Category:
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})"
-            f"{self.category_total}, {self.product_total}"
+            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})\n"
+            f"Category.category_total: {self.category_total}, Category.product_total: {self.product_total}"
         )
 
     def __len__(self):
@@ -151,9 +151,9 @@ class LawnGrass(Product):
         self.color = color
 
     def __repr__(self):
-        super().__repr__()
-        return (f"('{self.country}', '{self.germ_period}',"
-                f"  {self.color})")
+        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
+                f"{self.product_price}, {self.product_quantity},"
+                f"'{self.country}', '{self.germ_period}', {self.color})")
 
     @classmethod
     def add_product(cls, *arg):

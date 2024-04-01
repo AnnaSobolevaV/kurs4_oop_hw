@@ -50,10 +50,12 @@ def tv_55QLED():
     return Product("55\" QLED 4K", "Фоновая подсветка",
                    123000.0, 7)
 
+
 @pytest.fixture
 def lw_dreams():
     return LawnGrass("Мечта садовника", "Неприхотлива",
-                   1230.0, 17, "Россия", 20, "зеленая")
+                     1230.0, 17, "Россия", 20, "зеленая")
+
 
 @pytest.fixture
 def lawn_grass(lw_dreams):
@@ -73,9 +75,11 @@ def smartphone_new_samsung():
     return ["NEW Samsung Galaxy C23 Ultra", "NEW 256GB, Серый цвет, 200MP камера", 200000.0, 6, 400,
             "Samsung Galaxy", "256GB", "Серый"]
 
+
 @pytest.fixture
 def tv_new():
     return ["NEW tv", "NEW TV, Серый цвет", 220000.0, 16]
+
 
 @pytest.fixture
 def lw_new():
@@ -107,7 +111,7 @@ def test_init_category(smartphone, smartphone_samsung,
 
 
 def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
-                                      smartphone_new_samsung_0):
+                                      smartphone_new_samsung_0, category_tv, tv_new, lawn_grass, lw_new):
     new_prod = Smartphone.add_product(*smartphone_new_samsung)
     smartphone.add_product_in_list(new_prod)
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
@@ -118,6 +122,15 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                        'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
                                        'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+
+    new_prod = LawnGrass.add_product(*lw_new)
+    lawn_grass.add_product_in_list(new_prod)
+    assert lawn_grass.product_list == ('Мечта садовника, 1230.0 руб. Остаток: 17 шт.\n'
+                                       'NEW lv, 2100.0 руб. Остаток: 11 шт.\n')
+
+    new_prod = Product.add_product(*tv_new)
+    category_tv.add_product_in_list(new_prod)
+    assert category_tv.product_list == 'NEW tv, 220000.0 руб. Остаток: 16 шт.\n'
 
 
 def test_new_price(smartphone, smartphone_new_samsung_0):
@@ -156,22 +169,36 @@ def test_repr_category(smartphone):
     assert repr(smartphone) == ("Category('Смартфоны', 'Смартфоны, как средство не только коммуникации, "
                                 "но и получение дополнительных функций для удобства жизни', "
                                 "[Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP камера', "
-                                "180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')])7, 8")
+                                "180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')])\n"
+                                "Category.category_total: 9, Category.product_total: 9")
 
 
-def test_repr_product(smartphone_samsung):
+def test_repr_smartphone(smartphone_samsung):
     assert repr(smartphone_samsung) == ("Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP "
                                         "камера', 180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')")
 
 
-def test_len_category(smartphone1):
+def test_repr_lawn_grass(lw_dreams):
+    assert repr(lw_dreams) == "LawnGrass('Мечта садовника', 'Неприхотлива',1230.0, 17,'Россия', '20', зеленая)"
+
+
+def test_repr_product(tv_55QLED):
+    assert repr(tv_55QLED) == "Product('55\" QLED 4K', 'Фоновая подсветка', 123000.0, 7)"
+
+
+def test_len_category(smartphone1, lawn_grass, category_tv):
     assert len(smartphone1) == 15
+    assert len(lawn_grass) == 17
+    assert len(category_tv) == 0
 
 
-def test_len_product(smartphone_samsung1):
+def test_len_product(smartphone_samsung1, tv_55QLED, lw_dreams):
     assert len(smartphone_samsung1) == 10
+    assert len(tv_55QLED) == 7
+    assert len(lw_dreams) == 17
 
 
-def test_add_product(smartphone_samsung, smartphone_samsung1, tv_55QLED):
+def test_add_product(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_dreams):
     assert smartphone_samsung + smartphone_samsung1 == 100000 * 10 + 180000 * 5
     assert smartphone_samsung + tv_55QLED == 'TypeError: different classes'
+    assert lw_dreams + tv_55QLED == 'TypeError: different classes'
