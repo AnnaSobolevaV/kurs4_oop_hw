@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class MixinLog:
     def obj_creation_log(self):
-        print('MixinLog: created new object:', self.__repr__())
+        return f'MixinLog: new object: {self.__repr__()}'
 
 
 class Category(MixinLog):
