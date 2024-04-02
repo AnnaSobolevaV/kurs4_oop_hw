@@ -3,6 +3,8 @@ from data.classes import Category
 from data.classes import Product
 from data.classes import Smartphone
 from data.classes import LawnGrass
+from data.classes import MixinLog
+from data.classes import Things
 
 
 @pytest.fixture
@@ -181,10 +183,10 @@ def test_str_product(smartphone_samsung):
 
 def test_repr_category(smartphone):
     assert repr(smartphone) == ("Category('Смартфоны', 'Смартфоны, как средство не только коммуникации, "
-                                "но и получение дополнительных функций для удобства жизни', "
-                                "[Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP камера', "
+                                "но и получение дополнительных функций для удобства жизни',\n"
+                                "\t\t[Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP камера', "
                                 "180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')])\n"
-                                "Category.category_total: 9, Category.product_total: 9")
+                                "\t\tCategory.category_total: 9, Category.product_total: 9")
 
 
 def test_repr_smartphone(smartphone_samsung):
@@ -216,3 +218,31 @@ def test_add_product(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_drea
     assert smartphone_samsung + smartphone_samsung1 == 100000 * 10 + 180000 * 5
     assert smartphone_samsung + tv_55QLED == 'TypeError: different classes'
     assert lw_dreams + tv_55QLED == 'TypeError: different classes'
+
+
+def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_new, lawn_grass, lw_new):
+    new_prod = Smartphone.add_product(*smartphone_new_samsung)
+    assert new_prod.obj_creation_log() == ("MixinLog: new object: Smartphone('NEW Samsung Galaxy C23 Ultra', "
+                                           "'NEW 256GB, Серый цвет, 200MP камера', 200000.0, 6, 400, 'Samsung Galaxy',"
+                                           " '256GB', 'Серый')")
+    new_prod = LawnGrass.add_product(*lw_new)
+    assert new_prod.obj_creation_log() == ("MixinLog: new object: LawnGrass('NEW lv', 'NEW LV',2100.0,"
+                                           " 11,'Россия', '30', Серый)")
+
+    new_prod = Product.add_product(*tv_new)
+    assert new_prod.obj_creation_log() == "MixinLog: new object: Product('NEW tv', 'NEW TV, Серый цвет', 220000.0, 16)"
+
+    assert category_tv.obj_creation_log() == ("MixinLog: new object: Category('Телевизоры', "
+                                              "'Современный телевизор, который позволяет наслаждаться просмотром, "
+                                              "станет вашим другом и помощником',\n\t\t[])\n"
+                                              "\t\tCategory.category_total: 15, Category.product_total: 14")
+    assert lawn_grass.obj_creation_log() == ("MixinLog: new object: Category('Трава газонная', "
+                                             "'Очень полезный товар',\n\t\t[LawnGrass('Мечта садовника', "
+                                             "'Неприхотлива',1230.0, 17,'Россия', '20', зеленая)])\n"
+                                             "\t\tCategory.category_total: 15, Category.product_total: 14")
+    assert smartphone.obj_creation_log() == ("MixinLog: new object: Category('Смартфоны', 'Смартфоны, как средство "
+                                             "не только коммуникации, но и получение дополнительных функций "
+                                             "для удобства жизни',\n\t\t[Smartphone('Samsung Galaxy C23 Ultra', "
+                                             "'256GB, Серый цвет, 200MP камера', 180000.0, 5, 500, 'Samsung Galaxy', "
+                                             "'256GB', 'Серый')])\n"
+                                             "\t\tCategory.category_total: 15, Category.product_total: 14")

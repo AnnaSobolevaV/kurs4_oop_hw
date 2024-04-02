@@ -12,7 +12,6 @@
         "model": "Samsung Galaxy",
         "memory": "256GB",
         "color": "Серый"
-
       },
       {
         "name": "Iphone 15",
@@ -33,7 +32,6 @@
         "model": "Xiaomi Redmi Note",
         "memory": "1024GB",
         "color": "Синий"
-
       }
     ]
   },
@@ -61,7 +59,6 @@
         "country": "Россия",
         "germ_period": 20,
         "color": "зеленая"
-
       }
     ]
   }
