@@ -102,7 +102,7 @@ class Product(Things, MixinLog):
         self.product_quantity = prod_quantity
 
     def __str__(self):
-        return (f'{self.product_name}, {self.product_price} руб. Остаток: {self.product_quantity} шт.\n')
+        return f'{self.product_name}, {self.product_price} руб. Остаток: {self.product_quantity} шт.\n'
 
     def __repr__(self):
         return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
