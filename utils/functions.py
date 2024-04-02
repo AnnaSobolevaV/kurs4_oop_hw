@@ -29,6 +29,8 @@ def to_create_list_of_categories_with_products(data):
             else:
                 prod = classes.Product(product['name'], product['description'], product['price'], product['quantity'])
                 product_list.append(prod)
+            prod.obj_creation_log()
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
+        category.obj_creation_log()
     return categories

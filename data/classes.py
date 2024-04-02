@@ -1,4 +1,12 @@
-class Category:
+from abc import ABC, abstractmethod
+
+
+class MixinLog:
+    def obj_creation_log(self):
+        print('MixinLog: created new object:', self.__repr__())
+
+
+class Category(MixinLog):
     """
     Класс "Категория" (Category) содержит атрибуты:
     - category_name - название категории
@@ -26,8 +34,9 @@ class Category:
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}', {self.__product_list})\n"
-            f"Category.category_total: {self.category_total}, Category.product_total: {self.product_total}"
+            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}',\n"
+            f"\t\t{self.__product_list})\n"
+            f"\t\tCategory.category_total: {self.category_total}, Category.product_total: {self.product_total}"
         )
 
     def __len__(self):
@@ -67,7 +76,13 @@ class Category:
             return f'TypeError: {new_prod.__class__} is not Product'
 
 
-class Product:
+class Things(ABC):
+    @abstractmethod
+    def add_product(self, new_prod):
+        pass
+
+
+class Product(Things, MixinLog):
     """
     Класс "Продукт" (Product) содержит:
     - product_name - название товара
