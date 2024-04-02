@@ -19,7 +19,8 @@ def to_create_list_of_categories_with_products(data):
         products = item.get('products')
         for product in products:
             if item.get('name') == "Смартфоны":
-                prod = classes.Smartphone(product['name'], product['description'], product['price'], product['quantity'],
+                prod = classes.Smartphone(product['name'], product['description'], product['price'],
+                                          product['quantity'],
                                           product['performance'], product['model'], product['memory'], product['color'])
                 product_list.append(prod)
             elif item.get('name') == 'Трава газонная':
