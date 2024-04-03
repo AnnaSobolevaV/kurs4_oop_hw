@@ -53,25 +53,9 @@ class Category(MixinLog):
         return products_printed
 
     def add_product_in_list(self, new_prod):
-        print(new_prod.__class__, self.category_name)
-        if issubclass(new_prod.__class__, Product):
-            if isinstance(new_prod, Smartphone):
-                if self.category_name == 'Смартфоны':
-                    self.__product_list.append(new_prod)
-                else:
-                    return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n '
-                            f'{self.category_name} is not Смартфоны')
-            elif isinstance(new_prod, LawnGrass):
-                if self.category_name == 'Трава газонная':
-                    self.__product_list.append(new_prod)
-                else:
-                    return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n'
-                            f'{self.category_name} is not Трава газонная')
-            elif self.category_name not in ('Смартфоны', 'Трава газонная'):
-                self.__product_list.append(new_prod)
-            else:
-                return (f'TypeError: adding {new_prod.__class__} into {self.category_name}\n'
-                        f'{self.category_name} is not Product')
+        if isinstance(new_prod, Product):
+            self.__product_list.append(new_prod)
+            return f"{new_prod.__class__} is added to {self.category_name}"
         else:
             return f'TypeError: {new_prod.__class__} is not Product'
 
@@ -112,7 +96,9 @@ class Product(Things, MixinLog):
         return self.product_quantity
 
     def __add__(self, other):
-        if isinstance(other, self.__class__):
+        if self.__class__ == other.__class__:
+            # if isinstance(other, self.__class__) and isinstance(self, other.__class__):
+            # if type(self) == type(other):
             return self.product_price * len(self) + other.product_price * len(other)
         else:
             return f"TypeError: different classes"

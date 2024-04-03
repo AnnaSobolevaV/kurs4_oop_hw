@@ -135,17 +135,14 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     assert category_tv.product_list == 'NEW tv, 220000.0 руб. Остаток: 16 шт.\n'
 
     new_prod = Smartphone.add_product(*smartphone_new_samsung)
-    assert lawn_grass.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.Smartphone'> into "
-                                                        "Трава газонная\n Трава газонная is not Смартфоны")
+    assert lawn_grass.add_product_in_list(new_prod) == "<class 'data.classes.Smartphone'> is added to Трава газонная"
 
     new_prod = LawnGrass.add_product(*lw_new)
-    assert category_tv.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.LawnGrass'> "
-                                                         "into Телевизоры\nТелевизоры is not Трава газонная")
+    assert category_tv.add_product_in_list(new_prod) == "<class 'data.classes.LawnGrass'> is added to Телевизоры"
     new_prod = Product.add_product(*tv_new)
-    assert smartphone.add_product_in_list(new_prod) == ("TypeError: adding <class 'data.classes.Product'> "
-                                                        "into Смартфоны\nСмартфоны is not Product")
+    assert smartphone.add_product_in_list(new_prod) == "<class 'data.classes.Product'> is added to Смартфоны"
 
-    new_prod = []
+    new_prod = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     assert smartphone.add_product_in_list(new_prod) == "TypeError: <class 'list'> is not Product"
 
 
@@ -214,10 +211,11 @@ def test_len_product(smartphone_samsung1, tv_55QLED, lw_dreams):
     assert len(lw_dreams) == 17
 
 
-def test_add_product(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_dreams):
+def test_add_(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_dreams):
     assert smartphone_samsung + smartphone_samsung1 == 100000 * 10 + 180000 * 5
     assert smartphone_samsung + tv_55QLED == 'TypeError: different classes'
     assert lw_dreams + tv_55QLED == 'TypeError: different classes'
+    assert tv_55QLED + lw_dreams == 'TypeError: different classes'
 
 
 def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_new, lawn_grass, lw_new):
