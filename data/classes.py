@@ -12,13 +12,6 @@ class BaseClass(ABC):
     def __init__(self):
         self.__product_list = []
 
-    @property
-    def product_list(self):
-        products_printed = ''
-        for prod in self.__product_list:
-            products_printed += str(prod)
-        return products_printed
-
     @abstractmethod
     def add_product_in_list(self, product):
         pass
@@ -46,6 +39,13 @@ class Order(BaseClass, MixinLog):
             f"\t\t{self.__product_list})"
 
         )
+
+    @property
+    def product_list(self):
+        products_printed = ''
+        for prod in self.__product_list:
+            products_printed += str(prod)
+        return products_printed
 
     def add_product_in_list(self, product, quantity=1):
         self.product_total += 1
@@ -96,6 +96,13 @@ class Category(BaseClass, MixinLog):
         for prod in self.__product_list:
             total_prod_in_category += prod.product_quantity
         return total_prod_in_category
+
+    @property
+    def product_list(self):
+        products_printed = ''
+        for prod in self.__product_list:
+            products_printed += str(prod)
+        return products_printed
 
     def add_product_in_list(self, new_prod):
         if isinstance(new_prod, Product):

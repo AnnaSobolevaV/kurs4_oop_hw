@@ -40,8 +40,9 @@ def to_create_list_of_categories_with_products(data):
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
         print(category.obj_creation_log())
-    new_order = classes.Order()
-    new_order.add_product_in_list(product_, 2)
-    print(new_order.obj_creation_log())
+    if product_ is not None:
+        new_order = classes.Order()
+        new_order.add_product_in_list(product_, 2)
+        print(new_order.obj_creation_log())
 
     return categories
