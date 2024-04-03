@@ -2,6 +2,7 @@ import json
 from data import classes
 
 
+
 def load_data(file_json):
     """
     Загружает данные из файла json
@@ -14,6 +15,8 @@ def load_data(file_json):
 
 def to_create_list_of_categories_with_products(data):
     categories = []
+    new_order = classes.Order()
+    product_ = None
     for item in data:
         product_list = []
         products = item.get('products')
@@ -30,8 +33,16 @@ def to_create_list_of_categories_with_products(data):
             else:
                 prod = classes.Product(product['name'], product['description'], product['price'], product['quantity'])
                 product_list.append(prod)
+                product_ = prod
             print(prod.obj_creation_log())
+        new_order.add_product_in_list(product_list[len(product_list) - 1], 2)
+        print(new_order.obj_creation_log())
         category = classes.Category(item.get('name'), item.get('description'), product_list)
         categories.append(category)
         print(category.obj_creation_log())
+    if product_ is not None:
+        new_order = classes.Order()
+        new_order.add_product_in_list(product_, 2)
+        print(new_order.obj_creation_log())
+
     return categories

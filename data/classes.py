@@ -6,7 +6,58 @@ class MixinLog:
         return f'MixinLog: new object: {self.__repr__()}'
 
 
-class Category(MixinLog):
+class BaseClass(ABC):
+    __product_list: list
+
+    def __init__(self):
+        self.__product_list = []
+
+    @abstractmethod
+    def add_product_in_list(self, product):
+        pass
+
+
+class Order(BaseClass, MixinLog):
+    order_id = 0
+    __product_list: list
+    order_number: int
+    product_total: int
+    cost: float
+
+    def __init__(self):
+        super().__init__()
+        self.__product_list = []
+        self.order_number = Order.order_id + 1
+        self.product_total = 0
+        self.cost = 0
+        Order.order_id += 1
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}('{self.order_number}', total amount: '{self.cost}',"
+            f" product_total: {self.product_total}\n"
+            f"\t\t{self.__product_list})"
+
+        )
+
+    @property
+    def product_list(self):
+        products_printed = ''
+        for prod in self.__product_list:
+            products_printed += str(prod)
+        return products_printed
+
+    def add_product_in_list(self, product, quantity=1):
+        self.product_total += 1
+        self.cost += quantity * product.product_price
+        if isinstance(product, Product):
+            self.__product_list.append([product, quantity])
+            return f"{product.__class__} is added to Order №{self.order_number}"
+        else:
+            return f'TypeError: {product.__class__} is not Product'
+
+
+class Category(BaseClass, MixinLog):
     """
     Класс "Категория" (Category) содержит атрибуты:
     - category_name - название категории
@@ -22,6 +73,7 @@ class Category(MixinLog):
     product_total = 0
 
     def __init__(self, category_name, category_description, product_list):
+        super().__init__()
         self.category_name = category_name
         self.category_description = category_description
         self.__product_list = product_list
@@ -96,9 +148,7 @@ class Product(Things, MixinLog):
         return self.product_quantity
 
     def __add__(self, other):
-        if self.__class__ == other.__class__:
-            # if isinstance(other, self.__class__) and isinstance(self, other.__class__):
-            # if type(self) == type(other):
+        if type(self) is type(other):
             return self.product_price * len(self) + other.product_price * len(other)
         else:
             return f"TypeError: different classes"
@@ -173,8 +223,8 @@ class LawnGrass(Product):
 
     def __repr__(self):
         return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
-                f"{self.product_price}, {self.product_quantity},"
-                f"'{self.country}', '{self.germ_period}', {self.color})")
+                f" {self.product_price}, {self.product_quantity},"
+                f" '{self.country}', '{self.germ_period}', {self.color})")
 
     @classmethod
     def add_product(cls, *arg):

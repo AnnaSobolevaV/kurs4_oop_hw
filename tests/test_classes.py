@@ -192,7 +192,7 @@ def test_repr_smartphone(smartphone_samsung):
 
 
 def test_repr_lawn_grass(lw_dreams):
-    assert repr(lw_dreams) == "LawnGrass('Мечта садовника', 'Неприхотлива',1230.0, 17,'Россия', '20', зеленая)"
+    assert repr(lw_dreams) == "LawnGrass('Мечта садовника', 'Неприхотлива', 1230.0, 17, 'Россия', '20', зеленая)"
 
 
 def test_repr_product(tv_55QLED):
@@ -224,8 +224,8 @@ def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_ne
                                            "'NEW 256GB, Серый цвет, 200MP камера', 200000.0, 6, 400, 'Samsung Galaxy',"
                                            " '256GB', 'Серый')")
     new_prod = LawnGrass.add_product(*lw_new)
-    assert new_prod.obj_creation_log() == ("MixinLog: new object: LawnGrass('NEW lv', 'NEW LV',2100.0,"
-                                           " 11,'Россия', '30', Серый)")
+    assert new_prod.obj_creation_log() == ("MixinLog: new object: LawnGrass('NEW lv', 'NEW LV', 2100.0,"
+                                           " 11, 'Россия', '30', Серый)")
 
     new_prod = Product.add_product(*tv_new)
     assert new_prod.obj_creation_log() == "MixinLog: new object: Product('NEW tv', 'NEW TV, Серый цвет', 220000.0, 16)"
@@ -236,7 +236,7 @@ def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_ne
                                               "\t\tCategory.category_total: 15, Category.product_total: 14")
     assert lawn_grass.obj_creation_log() == ("MixinLog: new object: Category('Трава газонная', "
                                              "'Очень полезный товар',\n\t\t[LawnGrass('Мечта садовника', "
-                                             "'Неприхотлива',1230.0, 17,'Россия', '20', зеленая)])\n"
+                                             "'Неприхотлива', 1230.0, 17, 'Россия', '20', зеленая)])\n"
                                              "\t\tCategory.category_total: 15, Category.product_total: 14")
     assert smartphone.obj_creation_log() == ("MixinLog: new object: Category('Смартфоны', 'Смартфоны, как средство "
                                              "не только коммуникации, но и получение дополнительных функций "
