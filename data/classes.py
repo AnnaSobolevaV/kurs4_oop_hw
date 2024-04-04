@@ -2,16 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class MixinLog:
+    def __repr__(self):
+        return f"<{self.__class__}, {self.__dict__}>"
+
     def obj_creation_log(self):
-        return f'MixinLog: new object: {self.__repr__()}'
+        return f'MixinLog: created: {self.__repr__()}'
 
 
 class BaseClass(ABC):
-    __product_list: list
-
-    def __init__(self):
-        self.__product_list = []
-
     @abstractmethod
     def add_product_in_list(self, product):
         pass
@@ -25,20 +23,11 @@ class Order(BaseClass, MixinLog):
     cost: float
 
     def __init__(self):
-        super().__init__()
         self.__product_list = []
         self.order_number = Order.order_id + 1
         self.product_total = 0
         self.cost = 0
         Order.order_id += 1
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}('{self.order_number}', total amount: '{self.cost}',"
-            f" product_total: {self.product_total}\n"
-            f"\t\t{self.__product_list})"
-
-        )
 
     @property
     def product_list(self):
@@ -48,9 +37,10 @@ class Order(BaseClass, MixinLog):
         return products_printed
 
     def add_product_in_list(self, product, quantity=1):
-        self.product_total += 1
-        self.cost += quantity * product.product_price
         if isinstance(product, Product):
+            self.product_total += 1
+            self.cost += quantity * product.product_price
+
             self.__product_list.append([product, quantity])
             return f"{product.__class__} is added to Order №{self.order_number}"
         else:
@@ -73,7 +63,6 @@ class Category(BaseClass, MixinLog):
     product_total = 0
 
     def __init__(self, category_name, category_description, product_list):
-        super().__init__()
         self.category_name = category_name
         self.category_description = category_description
         self.__product_list = product_list
@@ -83,13 +72,6 @@ class Category(BaseClass, MixinLog):
     def __str__(self):
         return (f'{self.category_name}, количество продуктов: {len(self)} шт.\n'
                 f'{self.product_list}')
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}('{self.category_name}', '{self.category_description}',\n"
-            f"\t\t{self.__product_list})\n"
-            f"\t\tCategory.category_total: {self.category_total}, Category.product_total: {self.product_total}"
-        )
 
     def __len__(self):
         total_prod_in_category = 0
@@ -140,10 +122,6 @@ class Product(Things, MixinLog):
     def __str__(self):
         return f'{self.product_name}, {self.product_price} руб. Остаток: {self.product_quantity} шт.\n'
 
-    def __repr__(self):
-        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
-                f" {self.product_price}, {self.product_quantity})")
-
     def __len__(self):
         return self.product_quantity
 
@@ -191,12 +169,6 @@ class Smartphone(Product):
         self.memory = memory
         self.color = color
 
-    def __repr__(self):
-        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
-                f" {self.product_price}, {self.product_quantity},"
-                f" {self.performance}, '{self.model}',"
-                f" '{self.memory}', '{self.color}')")
-
     @classmethod
     def add_product(cls, *arg):
         prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color = arg
@@ -220,11 +192,6 @@ class LawnGrass(Product):
         self.country = country
         self.germ_period = germ_period
         self.color = color
-
-    def __repr__(self):
-        return (f"{self.__class__.__name__}('{self.product_name}', '{self.product_description}',"
-                f" {self.product_price}, {self.product_quantity},"
-                f" '{self.country}', '{self.germ_period}', {self.color})")
 
     @classmethod
     def add_product(cls, *arg):

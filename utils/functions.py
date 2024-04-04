@@ -2,7 +2,6 @@ import json
 from data import classes
 
 
-
 def load_data(file_json):
     """
     Загружает данные из файла json
