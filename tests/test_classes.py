@@ -1,10 +1,8 @@
 import pytest
-from data.classes import Category
+from data.classes import Category, Order
 from data.classes import Product
 from data.classes import Smartphone
 from data.classes import LawnGrass
-from data.classes import MixinLog
-from data.classes import Things
 
 
 @pytest.fixture
@@ -179,24 +177,33 @@ def test_str_product(smartphone_samsung):
 
 
 def test_repr_category(smartphone):
-    assert repr(smartphone) == ("Category('Смартфоны', 'Смартфоны, как средство не только коммуникации, "
-                                "но и получение дополнительных функций для удобства жизни',\n"
-                                "\t\t[Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP камера', "
-                                "180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')])\n"
-                                "\t\tCategory.category_total: 9, Category.product_total: 9")
+    assert repr(smartphone) == ("<<class 'data.classes.Category'>, {'category_name': 'Смартфоны', "
+                                "'category_description': 'Смартфоны, как средство не только коммуникации, "
+                                "но и получение дополнительных функций для удобства жизни', "
+                                "'_Category__product_list': [<<class 'data.classes.Smartphone'>, {'product_name': "
+                                "'Samsung Galaxy C23 Ultra', 'product_description': '256GB, Серый цвет, "
+                                "200MP камера', '_Product__product_price': 180000.0, 'product_quantity': 5, "
+                                "'performance': 500, 'model': 'Samsung Galaxy', 'memory': '256GB', "
+                                "'color': 'Серый'}>]}>")
 
 
 def test_repr_smartphone(smartphone_samsung):
-    assert repr(smartphone_samsung) == ("Smartphone('Samsung Galaxy C23 Ultra', '256GB, Серый цвет, 200MP "
-                                        "камера', 180000.0, 5, 500, 'Samsung Galaxy', '256GB', 'Серый')")
+    assert repr(smartphone_samsung) == ("<<class 'data.classes.Smartphone'>, {'product_name': 'Samsung Galaxy C23 "
+                                        "Ultra', 'product_description': '256GB, Серый цвет, 200MP камера', "
+                                        "'_Product__product_price': 180000.0, 'product_quantity': 5, 'performance': "
+                                        "500, 'model': 'Samsung Galaxy', 'memory': '256GB', 'color': 'Серый'}>")
 
 
 def test_repr_lawn_grass(lw_dreams):
-    assert repr(lw_dreams) == "LawnGrass('Мечта садовника', 'Неприхотлива', 1230.0, 17, 'Россия', '20', зеленая)"
+    assert repr(lw_dreams) == ("<<class 'data.classes.LawnGrass'>, {'product_name': 'Мечта садовника', "
+                               "'product_description': 'Неприхотлива', '_Product__product_price': 1230.0, "
+                               "'product_quantity': 17, 'country': 'Россия', 'germ_period': 20, 'color': 'зеленая'}>")
 
 
 def test_repr_product(tv_55QLED):
-    assert repr(tv_55QLED) == "Product('55\" QLED 4K', 'Фоновая подсветка', 123000.0, 7)"
+    assert repr(tv_55QLED) == ("<<class 'data.classes.Product'>, {'product_name': '55\" QLED 4K', "
+                               "'product_description': 'Фоновая подсветка', '_Product__product_price': 123000.0, "
+                               "'product_quantity': 7}>")
 
 
 def test_len_category(smartphone1, lawn_grass, category_tv):
@@ -220,27 +227,50 @@ def test_add_(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_dreams):
 
 def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_new, lawn_grass, lw_new):
     new_prod = Smartphone.add_product(*smartphone_new_samsung)
-    assert new_prod.obj_creation_log() == ("MixinLog: new object: Smartphone('NEW Samsung Galaxy C23 Ultra', "
-                                           "'NEW 256GB, Серый цвет, 200MP камера', 200000.0, 6, 400, 'Samsung Galaxy',"
-                                           " '256GB', 'Серый')")
+    assert new_prod.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.Smartphone'>, {'product_name': "
+                                           "'NEW Samsung Galaxy C23 Ultra', 'product_description': 'NEW 256GB, "
+                                           "Серый цвет, 200MP камера', '_Product__product_price': 200000.0, "
+                                           "'product_quantity': 6, 'performance': 400, 'model': 'Samsung Galaxy', "
+                                           "'memory': '256GB', 'color': 'Серый'}>")
     new_prod = LawnGrass.add_product(*lw_new)
-    assert new_prod.obj_creation_log() == ("MixinLog: new object: LawnGrass('NEW lv', 'NEW LV', 2100.0,"
-                                           " 11, 'Россия', '30', Серый)")
+    assert new_prod.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.LawnGrass'>, {'product_name': "
+                                           "'NEW lv', 'product_description': 'NEW LV', '_Product__product_price': "
+                                           "2100.0, 'product_quantity': 11, 'country': 'Россия', 'germ_period': 30, "
+                                           "'color': 'Серый'}>")
 
     new_prod = Product.add_product(*tv_new)
-    assert new_prod.obj_creation_log() == "MixinLog: new object: Product('NEW tv', 'NEW TV, Серый цвет', 220000.0, 16)"
+    assert new_prod.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.Product'>, {'product_name': 'NEW "
+                                           "tv', 'product_description': 'NEW TV, Серый цвет', "
+                                           "'_Product__product_price': 220000.0, 'product_quantity': 16}>")
 
-    assert category_tv.obj_creation_log() == ("MixinLog: new object: Category('Телевизоры', "
-                                              "'Современный телевизор, который позволяет наслаждаться просмотром, "
-                                              "станет вашим другом и помощником',\n\t\t[])\n"
-                                              "\t\tCategory.category_total: 15, Category.product_total: 14")
-    assert lawn_grass.obj_creation_log() == ("MixinLog: new object: Category('Трава газонная', "
-                                             "'Очень полезный товар',\n\t\t[LawnGrass('Мечта садовника', "
-                                             "'Неприхотлива', 1230.0, 17, 'Россия', '20', зеленая)])\n"
-                                             "\t\tCategory.category_total: 15, Category.product_total: 14")
-    assert smartphone.obj_creation_log() == ("MixinLog: new object: Category('Смартфоны', 'Смартфоны, как средство "
-                                             "не только коммуникации, но и получение дополнительных функций "
-                                             "для удобства жизни',\n\t\t[Smartphone('Samsung Galaxy C23 Ultra', "
-                                             "'256GB, Серый цвет, 200MP камера', 180000.0, 5, 500, 'Samsung Galaxy', "
-                                             "'256GB', 'Серый')])\n"
-                                             "\t\tCategory.category_total: 15, Category.product_total: 14")
+    assert category_tv.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.Category'>, {'category_name': "
+                                              "'Телевизоры', 'category_description': 'Современный телевизор, "
+                                              "который позволяет наслаждаться просмотром, станет вашим другом и "
+                                              "помощником', '_Category__product_list': []}>")
+    assert lawn_grass.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.Category'>, {'category_name': "
+                                             "'Трава газонная', 'category_description': 'Очень полезный товар', "
+                                             "'_Category__product_list': [<<class 'data.classes.LawnGrass'>, "
+                                             "{'product_name': 'Мечта садовника', 'product_description': "
+                                             "'Неприхотлива', '_Product__product_price': 1230.0, 'product_quantity': "
+                                             "17, 'country': 'Россия', 'germ_period': 20, 'color': 'зеленая'}>]}>")
+    assert smartphone.obj_creation_log() == ("MixinLog: created: <<class 'data.classes.Category'>, {'category_name': "
+                                             "'Смартфоны', 'category_description': 'Смартфоны, как средство не только "
+                                             "коммуникации, но и получение дополнительных функций для удобства "
+                                             "жизни', '_Category__product_list': [<<class 'data.classes.Smartphone'>, "
+                                             "{'product_name': 'Samsung Galaxy C23 Ultra', 'product_description': "
+                                             "'256GB, Серый цвет, 200MP камера', '_Product__product_price': 180000.0, "
+                                             "'product_quantity': 5, 'performance': 500, 'model': 'Samsung Galaxy', "
+                                             "'memory': '256GB', 'color': 'Серый'}>]}>")
+
+
+def test_init_order(smartphone_samsung):
+    order = Order()
+    assert order.order_id == 1
+    assert order.order_number == 1
+    assert order.product_list == ''
+    assert order.product_total == 0
+    assert order.cost == 0.0
+    assert order.add_product_in_list(smartphone_samsung) == "<class 'data.classes.Smartphone'> is added to Order №1"
+    assert order.order_id == 1
+    assert order.add_product_in_list([1, 2]) == "TypeError: <class 'list'> is not Product"
+    assert order.order_id == 1
