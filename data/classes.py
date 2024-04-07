@@ -1,6 +1,14 @@
 from abc import ABC, abstractmethod
 
 
+class MyException(Exception):
+    def __init__(self, *args):
+        self.message = args[0] if args else 'Неизвестная ошибка.'
+
+    def __str__(self):
+        return self.message
+
+
 class MixinLog:
     def __repr__(self):
         return f"<{self.__class__}, {self.__dict__}>"
@@ -13,6 +21,11 @@ class BaseClass(ABC):
     @abstractmethod
     def add_product_in_list(self, product):
         pass
+
+    @staticmethod
+    def check_quantity(product):
+        if product.product_quantity == 0:
+            raise MyException("You can't add a product with 0 quantity")
 
 
 class Order(BaseClass, MixinLog):
@@ -28,6 +41,7 @@ class Order(BaseClass, MixinLog):
         self.product_total = 0
         self.cost = 0
         Order.order_id += 1
+        self.obj_creation_log()
 
     @property
     def product_list(self):
@@ -37,15 +51,22 @@ class Order(BaseClass, MixinLog):
         return products_printed
 
     def add_product_in_list(self, product, quantity=1):
-        if isinstance(product, Product):
-            super().add_product_in_list(product)
-            self.product_total += 1
-            self.cost += quantity * product.product_price
-
-            self.__product_list.append([product, quantity])
-            return f"{product.__class__} is added to Order №{self.order_number}"
+        if not isinstance(product, Product):
+            raise TypeError(f'{product.__class__} is not Product')
         else:
-            return f'TypeError: {product.__class__} is not Product'
+            try:
+                super().check_quantity(product)
+            except MyException as e:
+                print(e)
+                return str(e)
+            else:
+                self.__product_list.append([product, quantity])
+                self.product_total += 1
+                self.cost += quantity * product.product_price
+                print("Продукт добавлен успешно")
+                return f"{product.__class__} is added to Order №{self.order_number}"
+            finally:
+                print("Обработка добавления товара завершена")
 
 
 class Category(BaseClass, MixinLog):
@@ -88,12 +109,20 @@ class Category(BaseClass, MixinLog):
         return products_printed
 
     def add_product_in_list(self, new_prod):
-        if isinstance(new_prod, Product):
-            super().add_product_in_list(new_prod)
-            self.__product_list.append(new_prod)
-            return f"{new_prod.__class__} is added to {self.category_name}"
+        if not isinstance(new_prod, Product):
+            raise TypeError(f'{new_prod.__class__} is not Product')
         else:
-            return f'TypeError: {new_prod.__class__} is not Product'
+            try:
+                super().check_quantity(new_prod)
+            except MyException as e:
+                print(e)
+                return str(e)
+            else:
+                self.__product_list.append(new_prod)
+                print("Продукт добавлен успешно в Категорию")
+                return f"{new_prod.__class__} is added to {self.category_name}"
+            finally:
+                print("Обработка добавления товара в Категорию завершена")
 
     def get_average_price(self):
         total_price = 0
@@ -142,7 +171,7 @@ class Product(Things, MixinLog):
         if type(self) is type(other):
             return self.product_price * len(self) + other.product_price * len(other)
         else:
-            return f"TypeError: different classes"
+            raise TypeError("You can't add different classes")
 
     @classmethod
     def add_product(cls, *arg):
@@ -151,7 +180,7 @@ class Product(Things, MixinLog):
             new_prod = Product(prod_name, prod_description, prod_price, prod_quantity)
             return new_prod
         else:
-            raise ValueError('Товар с нулевым количеством не может быть добавлен ')
+            raise ValueError('Товар с нулевым количеством не может быть добавлен')
 
     @property
     def product_price(self):
@@ -193,7 +222,7 @@ class Smartphone(Product):
                                   color)
             return new_prod
         else:
-            raise ValueError('Товар с нулевым количеством не может быть добавлен ')
+            raise ValueError('Товар с нулевым количеством не может быть добавлен')
 
 
 class LawnGrass(Product):

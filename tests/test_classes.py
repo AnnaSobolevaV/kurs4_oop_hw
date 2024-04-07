@@ -6,6 +6,14 @@ from data.classes import LawnGrass
 
 
 @pytest.fixture
+def smartphone_samsung0():
+    return Smartphone("Samsung Galaxy C23 Ultra",
+                      "256GB, Серый цвет, 200MP камера",
+                      180000.0, 0, 500,
+                      "Samsung Galaxy", "256GB", "Серый")
+
+
+@pytest.fixture
 def smartphone_samsung():
     return Smartphone("Samsung Galaxy C23 Ultra",
                       "256GB, Серый цвет, 200MP камера",
@@ -82,8 +90,18 @@ def tv_new():
 
 
 @pytest.fixture
+def tv_new_0():
+    return ["NEW tv", "NEW TV, Серый цвет", 220000.0, 0]
+
+
+@pytest.fixture
 def lw_new():
     return ["NEW lv", "NEW LV", 2100.0, 11, "Россия", 30, "Серый"]
+
+
+@pytest.fixture
+def lw_new_0():
+    return ["NEW lv", "NEW LV", 2100.0, 0, "Россия", 30, "Серый"]
 
 
 def test_init_product(tv_55QLED):
@@ -110,17 +128,12 @@ def test_init_category(smartphone, smartphone_samsung,
     assert category_tv.product_total == 3
 
 
-def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
-                                      smartphone_new_samsung_0, category_tv, tv_new, lawn_grass, lw_new):
+def test_category_add_product_in_list(smartphone, smartphone_new_samsung, smartphone_samsung0, category_tv, tv_new,
+                                      lawn_grass, lw_new):
     new_prod = Smartphone.add_product(*smartphone_new_samsung)
     smartphone.add_product_in_list(new_prod)
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                        'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
-
-    try:
-        Smartphone.add_product(*smartphone_new_samsung_0)
-    except ValueError as e:
-        assert str(e) == 'Товар с нулевым количеством не может быть добавлен '
 
     new_prod = LawnGrass.add_product(*lw_new)
     lawn_grass.add_product_in_list(new_prod)
@@ -140,7 +153,10 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     assert smartphone.add_product_in_list(new_prod) == "<class 'data.classes.Product'> is added to Смартфоны"
 
     new_prod = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    assert smartphone.add_product_in_list(new_prod) == "TypeError: <class 'list'> is not Product"
+    with pytest.raises(TypeError, match="<class 'list'> is not Product"):
+        smartphone.add_product_in_list(new_prod)
+
+    assert smartphone.add_product_in_list(smartphone_samsung0) == "You can't add a product with 0 quantity"
 
 
 def test_new_price(smartphone, smartphone_new_samsung):
@@ -219,9 +235,12 @@ def test_len_product(smartphone_samsung1, tv_55QLED, lw_dreams):
 
 def test_add_(smartphone_samsung, smartphone_samsung1, tv_55QLED, lw_dreams):
     assert smartphone_samsung + smartphone_samsung1 == 100000 * 10 + 180000 * 5
-    assert smartphone_samsung + tv_55QLED == 'TypeError: different classes'
-    assert lw_dreams + tv_55QLED == 'TypeError: different classes'
-    assert tv_55QLED + lw_dreams == 'TypeError: different classes'
+    with pytest.raises(TypeError, match="You can't add different classes"):
+        smartphone_samsung + tv_55QLED
+    with pytest.raises(TypeError, match="You can't add different classes"):
+        lw_dreams + tv_55QLED
+    with pytest.raises(TypeError, match="You can't add different classes"):
+        tv_55QLED + lw_dreams
 
 
 def test_obj_creation_log(smartphone, smartphone_new_samsung, category_tv, tv_new, lawn_grass, lw_new):
@@ -271,15 +290,51 @@ def test_init_order(smartphone_samsung):
     assert order.cost == 0.0
     assert order.add_product_in_list(smartphone_samsung) == "<class 'data.classes.Smartphone'> is added to Order №1"
     assert order.order_id == 1
-    assert order.add_product_in_list([1, 2]) == "TypeError: <class 'list'> is not Product"
+    with pytest.raises(TypeError, match="<class 'list'> is not Product"):
+        order.add_product_in_list([1, 2])
     assert order.order_id == 1
 
 
-def test_add_prod(smartphone, smartphone_new_samsung_0):
-    try:
+def test_repr_order(smartphone_samsung):
+    order = Order()
+    assert repr(order) == ("<<class 'data.classes.Order'>, {'_Order__product_list': [],"
+                           " 'order_number': 2, 'product_total': 0, 'cost': 0}>")
+    order.add_product_in_list(smartphone_samsung)
+    assert repr(order) == ("<<class 'data.classes.Order'>, {'_Order__product_list': [[<<class "
+                           "'data.classes.Smartphone'>, {'product_name': 'Samsung Galaxy C23 Ultra', "
+                           "'product_description': '256GB, Серый цвет, 200MP камера', '_Product__product_price': "
+                           "180000.0, 'product_quantity': 5, 'performance': 500, 'model': 'Samsung Galaxy', "
+                           "'memory': '256GB', 'color': 'Серый'}>, 1]], 'order_number': 2, 'product_total': 1, "
+                           "'cost': 180000.0}>")
+
+
+def test_order_add_product_in_list(smartphone_samsung, lw_dreams, smartphone_samsung0):
+    order = Order()
+    order.add_product_in_list(smartphone_samsung)
+    assert order.product_list == ("[<<class 'data.classes.Smartphone'>, {'product_name': 'Samsung Galaxy C23 Ultra', "
+                                  "'product_description': '256GB, Серый цвет, 200MP камера', "
+                                  "'_Product__product_price': 180000.0, 'product_quantity': 5, 'performance': 500, "
+                                  "'model': 'Samsung Galaxy', 'memory': '256GB', 'color': 'Серый'}>, 1]")
+    order.add_product_in_list(lw_dreams, 3)
+    assert order.product_list == ("[<<class 'data.classes.Smartphone'>, {'product_name': 'Samsung Galaxy C23 Ultra', "
+                                  "'product_description': '256GB, Серый цвет, 200MP камера', "
+                                  "'_Product__product_price': 180000.0, 'product_quantity': 5, 'performance': 500, "
+                                  "'model': 'Samsung Galaxy', 'memory': '256GB', 'color': 'Серый'}>, 1][<<class "
+                                  "'data.classes.LawnGrass'>, {'product_name': 'Мечта садовника', "
+                                  "'product_description': 'Неприхотлива', '_Product__product_price': 1230.0, "
+                                  "'product_quantity': 17, 'country': 'Россия', 'germ_period': 20, "
+                                  "'color': 'зеленая'}>, 3]")
+
+    assert order.add_product_in_list(smartphone_samsung0, 3) == "You can't add a product with 0 quantity"
+
+
+def test_add_prod_0(smartphone_new_samsung_0, lw_new_0, tv_new_0):
+    with pytest.raises(ValueError, match='Товар с нулевым количеством не может быть добавлен'):
         Smartphone.add_product(*smartphone_new_samsung_0)
-    except ValueError as e:
-        assert str(e) == 'Товар с нулевым количеством не может быть добавлен '
+    with pytest.raises(ValueError, match='Товар с нулевым количеством не может быть добавлен'):
+        Product.add_product(*tv_new_0)
+    with pytest.raises(ValueError, match='Товар с нулевым количеством не может быть добавлен'):
+        LawnGrass.add_product(*lw_new_0)
 
 
 def test_get_average_price(smartphone, smartphone1, category_tv):
