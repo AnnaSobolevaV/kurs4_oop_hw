@@ -118,11 +118,7 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
                                        'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
 
     try:
-        new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
-        smartphone.add_product_in_list(new_prod)
-        assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                           'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
-                                           'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+        Smartphone.add_product(*smartphone_new_samsung_0)
     except ValueError as e:
         assert str(e) == 'Товар с нулевым количеством не может быть добавлен '
 
@@ -281,9 +277,12 @@ def test_init_order(smartphone_samsung):
 
 def test_add_prod(smartphone, smartphone_new_samsung_0):
     try:
-        new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
-        smartphone.add_product_in_list(new_prod)
-        assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                           'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+        Smartphone.add_product(*smartphone_new_samsung_0)
     except ValueError as e:
         assert str(e) == 'Товар с нулевым количеством не может быть добавлен '
+
+
+def test_get_average_price(smartphone, smartphone1, category_tv):
+    assert smartphone.get_average_price() == 180000.0
+    assert smartphone1.get_average_price() == 140000.0
+    assert category_tv.get_average_price() == 0

@@ -38,6 +38,7 @@ class Order(BaseClass, MixinLog):
 
     def add_product_in_list(self, product, quantity=1):
         if isinstance(product, Product):
+            super().add_product_in_list(product)
             self.product_total += 1
             self.cost += quantity * product.product_price
 
@@ -88,10 +89,22 @@ class Category(BaseClass, MixinLog):
 
     def add_product_in_list(self, new_prod):
         if isinstance(new_prod, Product):
+            super().add_product_in_list(new_prod)
             self.__product_list.append(new_prod)
             return f"{new_prod.__class__} is added to {self.category_name}"
         else:
             return f'TypeError: {new_prod.__class__} is not Product'
+
+    def get_average_price(self):
+        total_price = 0
+        total_prod = 0
+        try:
+            for prod in self.__product_list:
+                total_price += prod.product_price
+                total_prod += 1
+            return total_price / total_prod
+        except ZeroDivisionError:
+            return 0
 
 
 class Things(ABC):
@@ -176,7 +189,8 @@ class Smartphone(Product):
     def add_product(cls, *arg):
         prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color = arg
         if prod_quantity != 0:
-            new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color)
+            new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory,
+                                  color)
             return new_prod
         else:
             raise ValueError('Товар с нулевым количеством не может быть добавлен ')
