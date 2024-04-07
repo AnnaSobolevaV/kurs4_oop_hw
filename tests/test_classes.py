@@ -117,11 +117,14 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
                                        'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
 
-    new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
-    smartphone.add_product_in_list(new_prod)
-    assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+    try:
+        new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
+        smartphone.add_product_in_list(new_prod)
+        assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
+                                           'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
+                                           'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+    except ValueError as e:
+        assert str(e) == 'Товар с нулевым количеством не может быть добавлен '
 
     new_prod = LawnGrass.add_product(*lw_new)
     lawn_grass.add_product_in_list(new_prod)
@@ -144,26 +147,26 @@ def test_category_add_product_in_list(smartphone, smartphone_new_samsung,
     assert smartphone.add_product_in_list(new_prod) == "TypeError: <class 'list'> is not Product"
 
 
-def test_new_price(smartphone, smartphone_new_samsung_0):
-    new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
+def test_new_price(smartphone, smartphone_new_samsung):
+    new_prod = Smartphone.add_product(*smartphone_new_samsung)
     new_prod.product_price = 0
     smartphone.add_product_in_list(new_prod)
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
-    new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
+                                       'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
+    new_prod = Smartphone.add_product(*smartphone_new_samsung)
     new_prod.product_price = 20
     smartphone.add_product_in_list(new_prod)
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 0 шт.\n')
+                                       'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
+                                       'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 6 шт.\n')
 
-    new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
+    new_prod = Smartphone.add_product(*smartphone_new_samsung)
     new_prod.product_price = -20
     smartphone.add_product_in_list(new_prod)
     assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 0 шт.\n'
-                                       'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+                                       'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n'
+                                       'NEW Samsung Galaxy C23 Ultra, 20.0 руб. Остаток: 6 шт.\n'
+                                       'NEW Samsung Galaxy C23 Ultra, 200000.0 руб. Остаток: 6 шт.\n')
 
 
 def test_str_category(smartphone1):
@@ -274,3 +277,13 @@ def test_init_order(smartphone_samsung):
     assert order.order_id == 1
     assert order.add_product_in_list([1, 2]) == "TypeError: <class 'list'> is not Product"
     assert order.order_id == 1
+
+
+def test_add_prod(smartphone, smartphone_new_samsung_0):
+    try:
+        new_prod = Smartphone.add_product(*smartphone_new_samsung_0)
+        smartphone.add_product_in_list(new_prod)
+        assert smartphone.product_list == ('Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт.\n'
+                                           'NEW Samsung Galaxy C23 Ultra, 15000.0 руб. Остаток: 0 шт.\n')
+    except ValueError as e:
+        assert str(e) == 'Товар с нулевым количеством не может быть добавлен '

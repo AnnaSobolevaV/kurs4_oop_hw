@@ -134,8 +134,11 @@ class Product(Things, MixinLog):
     @classmethod
     def add_product(cls, *arg):
         prod_name, prod_description, prod_price, prod_quantity = arg
-        new_prod = Product(prod_name, prod_description, prod_price, prod_quantity)
-        return new_prod
+        if prod_quantity != 0:
+            new_prod = Product(prod_name, prod_description, prod_price, prod_quantity)
+            return new_prod
+        else:
+            raise ValueError('Товар с нулевым количеством не может быть добавлен ')
 
     @property
     def product_price(self):
@@ -172,8 +175,11 @@ class Smartphone(Product):
     @classmethod
     def add_product(cls, *arg):
         prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color = arg
-        new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color)
-        return new_prod
+        if prod_quantity != 0:
+            new_prod = Smartphone(prod_name, prod_description, prod_price, prod_quantity, performance, model, memory, color)
+            return new_prod
+        else:
+            raise ValueError('Товар с нулевым количеством не может быть добавлен ')
 
 
 class LawnGrass(Product):
@@ -196,5 +202,8 @@ class LawnGrass(Product):
     @classmethod
     def add_product(cls, *arg):
         prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color = arg
-        new_prod = LawnGrass(prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color)
-        return new_prod
+        if prod_quantity != 0:
+            new_prod = LawnGrass(prod_name, prod_description, prod_price, prod_quantity, country, germ_period, color)
+            return new_prod
+        else:
+            raise ValueError('Товар с нулевым количеством не может быть добавлен')
