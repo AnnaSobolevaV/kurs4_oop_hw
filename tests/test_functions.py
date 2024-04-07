@@ -4,7 +4,7 @@ import pytest
 
 
 def test_load_data_empty():
-    assert functions.load_data('') == None
+    assert functions.load_data('') is None
 
 
 def test_load_data():
